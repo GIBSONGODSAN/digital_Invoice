@@ -4,6 +4,7 @@ from django.db import models
 from django.utils import timezone
 from .methods import encrypt_password
 
+# USER MODEL
 class CustomUser(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)
@@ -22,3 +23,11 @@ class CustomUser(models.Model):
     def __str__(self):
         return self.email
 
+# EXCEL DATA MODEL
+class Plant_Project_Info(models.Model):
+    PLANT = models.CharField(max_length=255, null=True, blank=True)
+    PROJECT = models.CharField(max_length=255, null=True, blank=True)
+    PROJECT_WPS = models.CharField(max_length=255, null=True, blank=True)
+    
+    def __str__(self):
+        return self.PLANT
