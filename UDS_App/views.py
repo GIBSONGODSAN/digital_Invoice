@@ -215,7 +215,8 @@ class PlantListView(APIView):
             queryset = Plant_Project_Info.objects.values('PLANT').distinct()
             # unique_plants = self.get_unique_plants(queryset)
             serializer = PlantSerializer(queryset, many=True)
-            return Response({'data':serializer.data, 'message':"Plant details listed"}, status=status.HTTP_200_OK)
+            plant_values = [item['PLANT'] for item in serializer.data]
+            return Response({'data':plant_values, 'message':"Plant details listed"}, status=status.HTTP_200_OK)
         else:
             return Response({'message': 'Please provide a valid request method.'}, status=status.HTTP_400_BAD_REQUEST)
     
@@ -223,6 +224,7 @@ class PlantListView(APIView):
 #PLANT PROJECT LIST API   
 class PlantProjectListView(APIView):
     authentication_classes = [UserTokenAuthentication]
+
     def get(self, request):
         data = request.data
         plant_name = data.get('plant_name', None)
@@ -230,6 +232,8 @@ class PlantProjectListView(APIView):
         if plant_name:
             queryset = Plant_Project_Info.objects.filter(PLANT=plant_name)
             serializer = PlantProjectInfoSerializer(queryset, many=True)
-            return Response({"data":serializer.data, 'message':"Projects are listed"}, status=status.HTTP_200_OK)
+            project_values = [item['PROJECT'] for item in serializer.data]
+            
+            return Response({"data": project_values, 'message': "Projects are listed"}, status=status.HTTP_200_OK)
         else:
             return Response({'message': 'Please provide a valid plant name.'}, status=status.HTTP_400_BAD_REQUEST)
