@@ -54,7 +54,7 @@ class SignInAPIView(APIView):
 
 #SIGN UP API / CREATE USER API
 class CustomUserCreateView(APIView):
-    authentication_classes = [AdminTokenAuthentication]
+    authentication_classes = [UserTokenAuthentication]
     def post(self, request, *args, **kwargs):
         print("Request Data:", request.data)  
         serializer = InsertUserSerializer(data=request.data)
@@ -146,7 +146,7 @@ class ZipDirectoryAPIView(APIView):
             smtp_server = 'smtp.gmail.com'
             smtp_port = 587
             smtp_username = 'gibson.25cs@licet.ac.in'
-            smtp_password = ''
+            smtp_password = 'NARSELmary1305@'
             print("Email being sent")
             # Send the email
             with smtplib.SMTP(smtp_server, smtp_port) as server:
