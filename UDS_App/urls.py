@@ -1,13 +1,16 @@
 from django.urls import path
-from .views import CustomUserCreateView, SignInAPIView, ExcelUploadAPIView, ZipDirectoryAPIView, PlantListView, PlantProjectListView, FileListAPIView, ZipDirectoryAPIView2
+from .views import UserDetailsAPIView, SignInAPIView, ExcelUploadAPIView, PlantListView, PlantProjectListView, FileListAPI_Alter_View, ZipDirectoryAPIView2
+from .views import SentDetailsAPIView, ScheduleDetailsAPIView
 
 urlpatterns = [
     path('login/', SignInAPIView.as_view(), name='user-login'),
-    path('create/', CustomUserCreateView.as_view(), name='create-customuser'),
+    path('user/', UserDetailsAPIView.as_view(), name='create-customuser'),  
+    path('user/<uuid:pk>', UserDetailsAPIView.as_view(), name='create-customuser'),
     path('uploadexcel/', ExcelUploadAPIView.as_view(), name='upload_excel_api'),
-    path('zipdirectory/', ZipDirectoryAPIView.as_view(), name='zip_directory'),
     path('plantlist/', PlantListView.as_view(), name='plant-list'),
     path('plantprojects/', PlantProjectListView.as_view(), name='plant-projects'),
-    path('filelist/', FileListAPIView.as_view(), name='file-list'),
-    path('zipdirectory2/', ZipDirectoryAPIView2.as_view(), name='zip_directory2'),
+    path('filelist/', FileListAPI_Alter_View.as_view(), name='file-list'),
+    path('createproject/', ZipDirectoryAPIView2.as_view(), name='zip_directory2'),
+    path('sentdetails/', SentDetailsAPIView.as_view(), name='sent-details-api'),
+    path('scheduledetails/', ScheduleDetailsAPIView.as_view(), name='sent-details-api'),
 ]

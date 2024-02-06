@@ -1,6 +1,14 @@
 import hashlib
 import datetime
 import jwt
+import os
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email import encoders
+from zipfile import ZipFile
+
 
 def encrypt_password(raw_password):
     salt = hashlib.sha256()
@@ -46,3 +54,47 @@ def admin_encode_token(payload: dict):
     ) + datetime.timedelta(days=7)
     token = jwt.encode(payload, "admin_key", algorithm="HS256")
     return token
+
+def zip_files(self, file_paths):
+        unique_name = datetime.now().strftime("%Y%m%d%H%M%S")
+        zip_file_path = os.path.join("D:/", f'zipped_files_{unique_name}.zip')
+        file_names = []
+
+        with ZipFile(zip_file_path, 'w') as zip_file:
+            for file_path in file_paths:
+                if os.path.exists(file_path) and os.path.isfile(file_path):
+                    file_names.append(os.path.basename(file_path))
+                    with open(file_path, 'rb') as file_content:
+                        arcname = os.path.basename(file_path)
+                        print(f"Adding to zip: {file_path} with arcname {arcname}")
+                        zip_file.writestr(arcname, file_content.read())
+
+        return zip_file_path, file_names
+
+def send_email(self, to_email, email_subject, email_body, zip_file_path):
+    sender_email = 'gibson.25cs@licet.ac.in'
+    sender_password = 'NARSELmary1305@'
+
+    msg = MIMEMultipart()
+    msg['From'] = sender_email
+    msg['To'] = to_email
+    msg['Subject'] = email_subject
+    body = email_body
+    msg.attach(MIMEText(body, 'plain'))
+    print(f"Attaching zip file: {zip_file_path}")
+    attachment = open(zip_file_path, 'rb')
+    part = MIMEBase('application', 'zip')
+    part.set_payload((attachment).read())
+    encoders.encode_base64(part)
+    part.add_header('Content-Disposition', "attachment; filename= %s" % os.path.basename(zip_file_path))
+    msg.attach(part)
+
+    try:
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        # server.starttls()
+        # server.login(sender_email, sender_password)
+        # server.sendmail(sender_email, to_email, msg.as_string())
+        # server.quit()
+    except Exception as e:
+        print(f"Error sending email: {str(e)}")
+        raise  # Re-raise the exception for the calling function to handle
